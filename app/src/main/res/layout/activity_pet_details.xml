@@ -31,11 +31,5 @@
         android:layout_height="35dp"
         android:gravity="center"/>
 
-    <Button
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:onClick="backToMainPage"
-        android:text="@string/back_to_main_page_text" />
+
 </LinearLayout>

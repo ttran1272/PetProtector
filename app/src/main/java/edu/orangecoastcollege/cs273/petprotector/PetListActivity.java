@@ -13,7 +13,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,17 @@ public class PetListActivity extends AppCompatActivity {
 
     private ImageView petImageView;
     private Uri imageUri;
+
+    private DBHelper db;
+    private List<Pet> petsList;
+    private PetListAdapter petListAdapter;
+    private ListView petsListView;
+
+    // Rerefences to the widgets needed
+    private EditText mPetName;
+    private EditText mPetDetails;
+    private EditText mPetPhone;
+    private ImageView mPetImageView;
 
     // Constants for permissions:
     private static final int GRANTED = PackageManager.PERMISSION_GRANTED;
@@ -32,9 +45,25 @@ public class PetListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pet_list);
+
+        db = new DBHelper(this);
+
         petImageView = (ImageView) findViewById(R.id.selectPetImageView);
 
         petImageView.setImageURI(getUriFromResource(this, R.drawable.none));
+
+        // Instantiate the Pet List View
+        petsListView = (ListView) findViewById(R.id.petListView);
+
+        // Fill the petsList with all pets from the database
+        petsList = db.getAllPets();
+
+        // Connect the list adapter with the list
+        petListAdapter = new PetListAdapter(this, R.layout.pet_list_items, petsList);
+
+        // Set the list view to use the list adapter
+        petsListView.setAdapter(petListAdapter);
+
     }
 
     public void selectPetImage(View v)
@@ -71,6 +100,7 @@ public class PetListActivity extends AppCompatActivity {
         {
             // Let's open up the image gallery
             Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
             // Start activity for a result (picture)
             startActivityForResult(galleryIntent, 1);  // any number; 1 is a make-up number
         }
@@ -102,4 +132,6 @@ public class PetListActivity extends AppCompatActivity {
         return Uri.parse(uri);
 
     }
+
+
 }
