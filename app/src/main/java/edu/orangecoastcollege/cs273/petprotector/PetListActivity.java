@@ -12,16 +12,35 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PetListActivity extends AppCompatActivity {
 
-    private ImageView petImageView;
+    private LinearLayout mLayout;
+
+    private DBHelper db;
+    private List<Pet> petsList;
+    private PetListAdapter petsListAdapter;
+    private ListView petsListView;
+
     private Uri imageUri;
+
+    // References to the widgets needed
+    private ImageView petImageView;
+    private EditText mPetName;
+    private EditText mPetDetails;
+    private EditText mPetPhone;
 
     // Constants for permissions:
     private static final int GRANTED = PackageManager.PERMISSION_GRANTED;
@@ -32,9 +51,41 @@ public class PetListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pet_list);
+
+        db = new DBHelper(this);
+
         petImageView = (ImageView) findViewById(R.id.selectPetImageView);
 
         petImageView.setImageURI(getUriFromResource(this, R.drawable.none));
+
+        // Instantiate the Pet List View
+        petsListView = (ListView) findViewById(R.id.petListView);
+
+        // Fill the petsList with all Pets from the database
+        petsList = db.getAllPets();
+
+        // Connect the list adapter with the list
+        petsListAdapter = new PetListAdapter(this, R.layout.pet_list_item, petsList);
+
+        // Set the list view to use the list adapter
+        petsListView.setAdapter(petsListAdapter);
+    }
+
+    public void viewPetDetails(View view){
+        mLayout = (LinearLayout) view;
+
+        Pet selectedPet = (Pet) mLayout.getTag();
+
+        // Implement the view pet details using an Intent
+        Intent detailsIntent = new Intent(this, PetDetailsActivity.class);
+
+        detailsIntent.putExtra("Name", selectedPet.getName());
+        detailsIntent.putExtra("Details", selectedPet.getDetail());
+        detailsIntent.putExtra("Phone", selectedPet.getPhone());
+        detailsIntent.putExtra("ImageName", selectedPet.getPetImageName());
+
+        startActivity(detailsIntent);
+
     }
 
     public void selectPetImage(View v)
@@ -100,6 +151,42 @@ public class PetListActivity extends AppCompatActivity {
 
         // Parser the String in order to construct a URI
         return Uri.parse(uri);
+
+    }
+
+    public void addPet(View view){
+
+        mPetName = (EditText) findViewById(R.id.nameEditText);
+        mPetDetails = (EditText) findViewById(R.id.detailsEditText);
+        mPetPhone = (EditText) findViewById(R.id.phoneEditText);
+
+
+        String name = mPetName.getText().toString();
+        String details = mPetDetails.getText().toString();
+        String phone = mPetPhone.getText().toString();
+
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(details) || TextUtils.isEmpty(phone))
+            Toast.makeText(this, "All information about the pet must be provided", Toast.LENGTH_LONG).show();
+        else
+        {
+            // Create a new pet object
+            Pet pet = new Pet(name, details, phone);
+
+            // Add pet to the pet list
+            petsList.add(pet);
+
+            // Add pet to the database
+            db.addPet(pet);
+
+            // Notify the list adapter that it has been changed
+            petsListAdapter.notifyDataSetChanged();
+
+            // Clear out the EditTExts
+            mPetName.setText("");
+            mPetDetails.setText("");
+            mPetPhone.setText("");
+
+        }
 
     }
 }

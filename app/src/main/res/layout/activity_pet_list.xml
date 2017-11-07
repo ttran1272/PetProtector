@@ -34,7 +34,7 @@
 
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/nameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -42,7 +42,7 @@
         android:hint="@string/name" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/detailsEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -50,7 +50,7 @@
         android:hint="@string/details" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/phoneEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -63,7 +63,8 @@
         android:paddingTop="20dp"
         android:layout_width="100dp"
         android:layout_height="50dp"
-        android:text="@string/add_button_text" />
+        android:text="@string/add_button_text"
+        android:onClick="addPet"/>
 
     <ListView
         android:id="@+id/petListView"
