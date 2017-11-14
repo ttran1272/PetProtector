@@ -65,6 +65,4 @@ public class PetListAdapter extends ArrayAdapter<Pet>{
 
         return view;
     }
-
-
 }
