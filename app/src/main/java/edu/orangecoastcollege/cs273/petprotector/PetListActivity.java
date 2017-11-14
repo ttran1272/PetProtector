@@ -58,7 +58,7 @@ public class PetListActivity extends AppCompatActivity {
         imageUri = getUriFromResource(this, R.drawable.none);
 
         // Clear the existing database
-        //deleteDatabase(DBHelper.DATABASE_NAME);
+        deleteDatabase(DBHelper.DATABASE_NAME);
 
         // Instantiate a new DBHelper
         db = new DBHelper(this);
