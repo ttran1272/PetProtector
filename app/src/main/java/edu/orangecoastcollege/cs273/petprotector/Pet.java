@@ -1,5 +1,7 @@
 package edu.orangecoastcollege.cs273.petprotector;
 
+import android.net.Uri;
+
 /**
  * Created by ttran1272 on 10/26/2017.
  */
@@ -81,6 +83,9 @@ public class Pet {
 
     public String toString()
     {
-        return "Pet{" ;
+        return "Pet{" +
+                "Id=" + mId +
+                ", Name='" + mName + "\'" + ", Details='" + mDetail + "\'" + ", Phone='" +
+                mPhone + "\'" + ", ImageName='" + petImageName + "\'" + "}";
     }
 }

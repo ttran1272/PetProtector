@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:id="@+id/petListLinearLayout"
     android:orientation="horizontal"
+              android:id="@+id/petListLinearLayout"
+              android:onClick="viewPetDetails"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/petListImageView"
         android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:onClick="viewPetDetails"
+        android:layout_height="67dp"
         app:srcCompat="@drawable/none" />
 
     <LinearLayout
@@ -23,6 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="35sp"
+            android:paddingLeft="10dp"
             android:text="TextView" />
 
         <TextView
@@ -31,6 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:textSize="20sp"
+            android:paddingLeft="10dp"
             android:text="TextView" />
     </LinearLayout>
 

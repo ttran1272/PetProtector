@@ -2,6 +2,7 @@ package edu.orangecoastcollege.cs273.petprotector;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -42,9 +44,11 @@ public class PetListAdapter extends ArrayAdapter<Pet>{
         View view = inflater.inflate(mResourceId, null);
 
         mLayout = (LinearLayout) view.findViewById(R.id.petListLinearLayout);
-        ImageView petItemImageView = (ImageView) view.findViewById(R.id.selectPetImageView);
+
+        ImageView petItemImageView = (ImageView) view.findViewById(R.id.petListImageView);
         TextView listItemPetNameTextView = (TextView) view.findViewById(R.id.petListNameTextView);
         TextView listItemPetDetailsTextView = (TextView) view.findViewById(R.id.petListDetailTextView);
+
 
         Pet aPet = mPetsList.get(pos);
 
@@ -54,8 +58,8 @@ public class PetListAdapter extends ArrayAdapter<Pet>{
         // Retrieve the pet details
         listItemPetDetailsTextView.setText(aPet.getDetail());
 
-        // TODO: Retrieve the pet image
-
+        // Retrieve the pet image
+        petItemImageView.setImageURI(Uri.parse(aPet.getPetImageName()));
 
         mLayout.setTag(aPet);
 

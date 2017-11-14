@@ -13,11 +13,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import org.w3c.dom.Text;
@@ -34,7 +36,7 @@ public class PetListActivity extends AppCompatActivity {
     private PetListAdapter petsListAdapter;
     private ListView petsListView;
 
-    private Uri imageUri;
+    private Uri imageUri ;
 
     // References to the widgets needed
     private ImageView petImageView;
@@ -52,16 +54,23 @@ public class PetListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pet_list);
 
+        // Initiate pet image
+        imageUri = getUriFromResource(this, R.drawable.none);
+
+        // Clear the existing database
+        //deleteDatabase(DBHelper.DATABASE_NAME);
+
+        // Instantiate a new DBHelper
         db = new DBHelper(this);
 
+        // Instantiate the image view
         petImageView = (ImageView) findViewById(R.id.selectPetImageView);
-
         petImageView.setImageURI(getUriFromResource(this, R.drawable.none));
 
         // Instantiate the Pet List View
         petsListView = (ListView) findViewById(R.id.petListView);
 
-        // Fill the petsList with all Pets from the database
+        // Clear out the list and Fill the petsList with all Pets from the database
         petsList = db.getAllPets();
 
         // Connect the list adapter with the list
@@ -71,6 +80,10 @@ public class PetListActivity extends AppCompatActivity {
         petsListView.setAdapter(petsListAdapter);
     }
 
+    /**
+     * This function return the pet details
+     * @param view
+     */
     public void viewPetDetails(View view){
         mLayout = (LinearLayout) view;
 
@@ -85,9 +98,13 @@ public class PetListActivity extends AppCompatActivity {
         detailsIntent.putExtra("ImageName", selectedPet.getPetImageName());
 
         startActivity(detailsIntent);
-
     }
 
+
+    /**
+     * This method is an onClick method, which allows the user to select an image view from the gallery
+     * @param v
+     */
     public void selectPetImage(View v)
     {
         List<String> permslist = new ArrayList<>();
@@ -122,12 +139,19 @@ public class PetListActivity extends AppCompatActivity {
         {
             // Let's open up the image gallery
             Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
             // Start activity for a result (picture)
             startActivityForResult(galleryIntent, 1);  // any number; 1 is a make-up number
         }
     }
 
 
+    /**
+     * This function displays the image in the image view
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -139,6 +163,13 @@ public class PetListActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * This function gets Uri from the resource
+     * @param context
+     * @param resId
+     * @return
+     */
     public static Uri getUriFromResource(Context context, int resId)
     {
         Resources res = context.getResources();
@@ -154,23 +185,28 @@ public class PetListActivity extends AppCompatActivity {
 
     }
 
+
+    /**
+     * This function adds a new pet to the database by clicking on the Add button in the layout
+     * @param view
+     */
     public void addPet(View view){
 
         mPetName = (EditText) findViewById(R.id.nameEditText);
         mPetDetails = (EditText) findViewById(R.id.detailsEditText);
         mPetPhone = (EditText) findViewById(R.id.phoneEditText);
 
-
         String name = mPetName.getText().toString();
         String details = mPetDetails.getText().toString();
         String phone = mPetPhone.getText().toString();
+        Uri petImage = imageUri;
 
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(details) || TextUtils.isEmpty(phone))
             Toast.makeText(this, "All information about the pet must be provided", Toast.LENGTH_LONG).show();
         else
         {
             // Create a new pet object
-            Pet pet = new Pet(name, details, phone);
+            Pet pet = new Pet(name, details, phone, petImage.toString());
 
             // Add pet to the pet list
             petsList.add(pet);
@@ -185,6 +221,8 @@ public class PetListActivity extends AppCompatActivity {
             mPetName.setText("");
             mPetDetails.setText("");
             mPetPhone.setText("");
+            imageUri = getUriFromResource(this, R.drawable.none);
+            petImageView.setImageURI(imageUri);
 
         }
 
